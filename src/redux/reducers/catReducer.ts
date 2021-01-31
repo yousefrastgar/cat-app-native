@@ -7,7 +7,7 @@ import {
 } from '../actions/catActions';
 
 const initialState = {
-    limit: 9,
+    limit: 10,
     page: 0,
     cats: [],
     categoryIds: [],

@@ -1,74 +1,52 @@
 import React, {useEffect} from "react";
 import {connect, RootStateOrAny} from "react-redux";
-import styled from "styled-components";
 import Category from "./Category";
 import CategoryModel from "./CategoryModel";
 import Loading from "../../components/Loading";
 import {fetchCategories} from "../../redux/actions/categoryActions";
 import Alert from "../../components/Alert";
-import List from "../../components/List";
-import Sidebar from "../../components/sidebar";
-import {toggleSidebar} from "../../redux/actions/sidebarActions";
-import Button from "../../components/Button";
-
-const CategoriesDiv = styled.div`
-    width: 25%;
-    border: 1px solid #dee2e6;
-    display: inline-block;
-    @media (max-width: 991px) {
-        & {
-            display: none;
-        }
-    }
-`;
-
-const CenteredDiv = styled.div`
-    text-align: center;
-    margin-top: 1.5rem;
-`;
+import {DrawerContentScrollView} from '@react-navigation/drawer';
+import {Button, FlatList, SafeAreaView, Text, View} from "react-native";
+import {styles} from "../../assets/Styles";
+import Icon from "react-native-vector-icons/Feather";
 
 const Categories = (
-    {dispatch, categories, loading, error}: { dispatch: Function, categories: [], loading: boolean, error: Error }
+    {
+        navigation,
+        dispatch,
+        categories,
+        loading,
+        error
+    }: { navigation: any, dispatch: Function, categories: [], loading: boolean, error: Error }
 ) => {
     useEffect(() => {
         dispatch(fetchCategories());
     }, []);
 
-    const renderCategories = () => {
-        return (
-            loading ?
-                <Loading/>
-                :
-                categories?.length ?
-                    <List>
-                        {categories.map((category: CategoryModel) => {
-                            return (
-                                <Category key={category.id} category={category}/>
-                            );
-                        })}
-                    </List>
-                    :
-                    <Alert text={error ? String(error) : "There is no data to display."}/>
-        );
-    }
-
     return (
-        <>
-            <Sidebar>
-                <CenteredDiv>
-                    <h2>Filter By Category</h2>
-                </CenteredDiv>
-                <hr/>
-                {renderCategories()}
-                <hr/>
-                <CenteredDiv>
-                    <Button title="Close" onClick={() => dispatch(toggleSidebar())}/>
-                </CenteredDiv>
-            </Sidebar>
-            <CategoriesDiv>
-                {renderCategories()}
-            </CategoriesDiv>
-        </>
+        <DrawerContentScrollView>
+            <View style={[styles.row, styles.flexWrap, styles.alignItemsCenter, styles.py4, styles.pl2, styles.mb1]}>
+                <Icon name="filter" size={26} color="#d35400"/>
+                <Text style={[styles.boldFontFamily, styles.fontSize22, styles.pl2]}>Filter By Categories</Text>
+            </View>
+            <SafeAreaView style={styles.flex1}>
+                <FlatList
+                    data={categories}
+                    renderItem={({item}: { item: CategoryModel }) => (<Category key={item.id} category={item}/>)}
+                    keyExtractor={(item: any) => item.id.toString()}
+                    ListEmptyComponent={
+                        loading ?
+                            <Loading/>
+                            :
+                            <Alert text={error ? String(error) : "There is no data to display."}/>
+                    }
+                    contentContainerStyle={styles.pl6}
+                />
+            </SafeAreaView>
+            <View style={styles.mt4}>
+                <Button title="Close" color="#d35400" onPress={() => navigation.closeDrawer()}/>
+            </View>
+        </DrawerContentScrollView>
     );
 }
 

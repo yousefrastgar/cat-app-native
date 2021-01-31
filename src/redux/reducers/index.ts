@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
 import categories from "./categoryReducer";
 import cats from "./catReducer";
-import sidebar from "./sidebarReducer";
+import net from "./netReducer";
 
 const rootReducer = combineReducers({
     categories,
     cats,
-    sidebar
+    net
 })
 
 export default rootReducer;

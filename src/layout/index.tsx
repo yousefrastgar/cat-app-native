@@ -1,14 +1,14 @@
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import {View} from "react-native";
+import NetChecker from "../components/NetChecker";
+import {styles} from "../assets/Styles";
 
-const Layout = ({hideHeader = false, children}: { hideHeader?: boolean, children: React.ReactNode }) => {
+const Layout = ({children}: { children: React.ReactNode }) => {
     return (
-        <>
-            {hideHeader ? null : <Header/>}
+        <View style={styles.flex1}>
             {children}
-            <Footer/>
-        </>
+            <NetChecker/>
+        </View>
     );
 }
 

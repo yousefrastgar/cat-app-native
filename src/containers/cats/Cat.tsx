@@ -1,21 +1,21 @@
-import React from "react";
+import React, {useState} from "react";
+import {Image} from "react-native";
 import CatModel from "./CatModel";
-import Image, {Shimmer} from "react-shimmer";
+import {styles} from "../../assets/Styles";
 
 const Cat = ({cat}: { cat: CatModel }) => {
+    const [showDefault, setShowDefault] = useState(true);
+    const [error, setError] = useState(false);
+
+    const image = showDefault ? require("../../assets/images/load.png") : (error ? require("../../assets/images/error.png") : {uri: cat.url});
+
     return (
         <Image
-            src={cat.url} fallback={<Shimmer width={250} height={250}/>}
-            NativeImgProps={{
-                style: {
-                    width: "250px",
-                    height: "250px",
-                    margin: "0rem 0.5rem 1rem",
-                    transition: "transform 1s",
-                    boxShadow: "0.3rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4)"
-                },
-                className: "gallery-image"
-            }}
+            source={image}
+            style={styles.square}
+            resizeMode="contain"
+            onLoadEnd={() => setShowDefault(false)}
+            onError={() => setError(true)}
         />
     );
 }
