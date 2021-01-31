@@ -9,12 +9,13 @@ import {FlatList, SafeAreaView} from "react-native";
 import {styles} from "../../assets/Styles";
 
 const Cats = (
-    {dispatch, page, limit, showMore, cats, categoryIds, loading, error}
-        : { dispatch: Function, page: number, limit: number, showMore: boolean, cats: [], categoryIds: Array<number>, loading: boolean, error: Error }
+    {isConnected, dispatch, page, limit, showMore, cats, categoryIds, loading, error}
+        : { isConnected: boolean, dispatch: Function, page: number, limit: number, showMore: boolean, cats: [], categoryIds: Array<number>, loading: boolean, error: Error }
 ) => {
     useEffect(() => {
-        dispatch(fetchCats(limit, page, categoryIds));
-    }, [limit, page, categoryIds]);
+        if (isConnected)
+            dispatch(fetchCats(limit, page, categoryIds));
+    }, [limit, page, categoryIds, isConnected]);
 
     const loadMoreCats = () => {
         dispatch(loadMore());
@@ -44,7 +45,8 @@ const mapStateToProps = (state: RootStateOrAny) => ({
     cats: state.cats.cats,
     loading: state.cats.loading,
     error: state.cats.error,
-    categoryIds: state.cats.categoryIds
+    categoryIds: state.cats.categoryIds,
+    isConnected: state.net.isConnected
 });
 
 export default connect(mapStateToProps)(Cats);

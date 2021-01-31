@@ -11,17 +11,13 @@ import {styles} from "../../assets/Styles";
 import Icon from "react-native-vector-icons/Feather";
 
 const Categories = (
-    {
-        navigation,
-        dispatch,
-        categories,
-        loading,
-        error
-    }: { navigation: any, dispatch: Function, categories: [], loading: boolean, error: Error }
+    {isConnected, navigation, dispatch, categories, loading, error}
+        : { isConnected: boolean, navigation: any, dispatch: Function, categories: [], loading: boolean, error: Error }
 ) => {
     useEffect(() => {
-        dispatch(fetchCategories());
-    }, []);
+        if (isConnected)
+            dispatch(fetchCategories());
+    }, [isConnected]);
 
     return (
         <DrawerContentScrollView>
@@ -53,7 +49,8 @@ const Categories = (
 const mapStateToProps = (state: RootStateOrAny) => ({
     categories: state.categories.categories,
     loading: state.categories.loading,
-    error: state.categories.error
+    error: state.categories.error,
+    isConnected: state.net.isConnected
 });
 
 export default connect(mapStateToProps)(Categories);
